@@ -1,8 +1,9 @@
 import threading
 import time
-from raspberry.motor_control import MotorController
+from raspberry.motor_controller import MotorController
 from raspberry.sensors import UltrasonicSensor
 from raspberry.audio_output import speak
+from raspberry.camera_sensor import CameraSensor
 from raspberry.config import (
     ULTRA_LEFT_TRIGGER, ULTRA_LEFT_ECHO,
     ULTRA_FRONT_TRIGGER, ULTRA_FRONT_ECHO,
@@ -15,6 +16,7 @@ class NavigationController:
         self.left_sensor = UltrasonicSensor(ULTRA_LEFT_TRIGGER, ULTRA_LEFT_ECHO)
         self.front_sensor = UltrasonicSensor(ULTRA_FRONT_TRIGGER, ULTRA_FRONT_ECHO)
         self.right_sensor = UltrasonicSensor(ULTRA_RIGHT_TRIGGER, ULTRA_RIGHT_ECHO)
+        self.camera_sensor = CameraSensor()
         self.nav_thread = None
         self.running = False
 
@@ -29,16 +31,25 @@ class NavigationController:
         self.running = False
         speak("Stopping navigation")
         self.motor.stop()
+        self.camera_sensor.release()
 
     def _nav_loop(self):
         speak("Starting navigation")
         try:
             while self.running:
+                # Sensor distances
                 d_left = self.left_sensor.get_distance()
                 d_front = self.front_sensor.get_distance()
                 d_right = self.right_sensor.get_distance()
 
-                if d_front < 20:
+                # Camera detection
+                frame = self.camera_sensor.get_frame()
+                obstacle_in_frame = False
+                if frame is not None:
+                    obstacle_in_frame = self.camera_sensor.detect_obstacle(frame)
+
+                # Decide movement
+                if d_front < 20 or obstacle_in_frame:
                     speak("Obstacle ahead")
                     if d_left > d_right:
                         self.motor.left(dur=0.5)
@@ -52,3 +63,4 @@ class NavigationController:
         finally:
             self.motor.stop()
             self.running = False
+            self.camera_sensor.release()

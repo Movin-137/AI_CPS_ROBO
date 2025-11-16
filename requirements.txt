@@ -2,19 +2,16 @@
 RPi.GPIO
 speechrecognition
 pyaudio
-transformers
-torch
-accelerate
+transformers==4.40.0   # lightweight transformers version
+torch==2.1.0           # CPU version for Pi
 numpy
 pillow
-
-# Networking
-socket
 
 # System utilities
 espeak
 
-# For Pi camera (optional)
+# Pi camera
 opencv-python
 
-# Optional (if Pi uses Python 3.9+, accelerate will handle backend)
+# Optional for accelerated model inference on host PC
+accelerate

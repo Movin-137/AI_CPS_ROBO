@@ -3,11 +3,12 @@ import torch
 
 class LLMInteraction:
     def __init__(self):
-        model_name = "microsoft/phi-2"
+        # Lightweight model suitable for Raspberry Pi
+        model_name = "EleutherAI/gpt-neo-125M"
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name, torch_dtype=torch.float16
-        ).to("cpu")
+        ).to("cpu")  # Pi will run on CPU
 
     def get_response(self, prompt):
         inputs = self.tokenizer(prompt, return_tensors="pt")
@@ -16,3 +17,4 @@ class LLMInteraction:
         )
         reply = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
         return reply
+
