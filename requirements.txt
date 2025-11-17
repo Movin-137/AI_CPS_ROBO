@@ -1,17 +1,24 @@
-# Core libraries
-RPi.GPIO
-speechrecognition
-pyaudio
-transformers==4.40.0   # lightweight transformers version
-torch==2.1.0           # CPU version for Pi
-numpy
-pillow
+# Core Raspberry Pi GPIO
+RPi.GPIO>=0.7.1
 
-# System utilities
-espeak
+# Speech-to-text
+SpeechRecognition>=3.14.0
+pyaudio>=0.2.14
 
-# Pi camera
-opencv-python
+# Transformers + ML (Light enough for Pi; works with Python 3.11)
+transformers==4.40.0
+accelerate>=0.25.0
+torch==2.1.0
 
-# Optional for accelerated model inference on host PC
-accelerate
+# Utility Libraries
+numpy>=1.24.0
+pillow>=10.0.0
+
+# Networking
+socket
+
+# Optional: Camera usage
+opencv-python>=4.8.0
+
+# For wake word detection (optional improvement)
+openwakeword>=0.6.0
