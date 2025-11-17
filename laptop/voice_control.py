@@ -4,7 +4,7 @@ from send_commands import send
 import socket
 
 # --- CONFIG ---
-PI_IP = "192.168.0.100"     # <--- set your Pi IP
+PI_IP = "192.168.137.43"     # <--- set your Pi IP
 PI_PORT = 5051
 WAKE_WORD = "hey robot"
 # ----------------

@@ -1,7 +1,7 @@
 # laptop/send_commands.py
 import socket
 
-def send(cmd, pi_ip="192.168.0.100", port=5051, timeout=5):
+def send(cmd, pi_ip="192.168.137.43", port=5051, timeout=5):
     """Send a text command to Raspberry Pi over TCP."""
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
