@@ -1,39 +1,44 @@
-import RPi.GPIO as GPIO
+# raspberry/motor_controller.py
+from gpiozero import Motor
 import time
 from raspberry.config import M0_FWD, M0_BWD, M1_FWD, M1_BWD
 
 class MotorController:
     def __init__(self):
-        GPIO.setmode(GPIO.BCM)
-        self.pins = [M0_FWD, M0_BWD, M1_FWD, M1_BWD]
-        for pin in self.pins:
-            GPIO.setup(pin, GPIO.OUT)
-            GPIO.output(pin, GPIO.LOW)
+        self.left = Motor(forward=M0_FWD, backward=M0_BWD)
+        self.right = Motor(forward=M1_FWD, backward=M1_BWD)
 
-    def forward(self, dur=0.3):
-        GPIO.output(M0_FWD, GPIO.HIGH)
-        GPIO.output(M1_FWD, GPIO.HIGH)
-        GPIO.output(M0_BWD, GPIO.LOW)
-        GPIO.output(M1_BWD, GPIO.LOW)
-        time.sleep(dur)
-        self.stop()
+    def forward(self, dur=None):
+        self.left.forward()
+        self.right.forward()
+        if dur:
+            time.sleep(dur)
+            self.stop()
 
-    def left(self, dur=0.3):
-        GPIO.output(M0_BWD, GPIO.HIGH)
-        GPIO.output(M1_FWD, GPIO.HIGH)
-        time.sleep(dur)
-        self.stop()
+    def left_turn(self, dur=None):
+        self.left.backward()
+        self.right.forward()
+        if dur:
+            time.sleep(dur)
+            self.stop()
 
-    def right(self, dur=0.3):
-        GPIO.output(M0_FWD, GPIO.HIGH)
-        GPIO.output(M1_BWD, GPIO.HIGH)
-        time.sleep(dur)
-        self.stop()
+    def right_turn(self, dur=None):
+        self.left.forward()
+        self.right.backward()
+        if dur:
+            time.sleep(dur)
+            self.stop()
+
+    def backward(self, dur=None):
+        self.left.backward()
+        self.right.backward()
+        if dur:
+            time.sleep(dur)
+            self.stop()
 
     def stop(self):
-        for pin in self.pins:
-            GPIO.output(pin, GPIO.LOW)
+        self.left.stop()
+        self.right.stop()
 
     def cleanup(self):
         self.stop()
-        GPIO.cleanup()

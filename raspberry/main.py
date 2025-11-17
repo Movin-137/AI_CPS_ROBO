@@ -1,4 +1,5 @@
-from raspberry.listener import start_listener
+# raspberry/main.py
+from raspberry.server import start_server
 
 if __name__ == "__main__":
-    start_listener()
+    start_server()
